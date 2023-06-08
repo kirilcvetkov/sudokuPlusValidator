@@ -12,6 +12,23 @@
     {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
     {% endblock %}
+    <style>
+      tr:first-child td {
+        border-top-color: gray;
+      }
+      tr:nth-child({{ sectionSide }}n) td {
+        border-bottom-color: gray;
+      }
+      td {
+        border: 1px solid lightgrey;
+      }
+      td:first-child {
+        border-left-color: gray;
+      }
+      td:nth-child({{ sectionSide }}n) {
+        border-right-color: gray;
+      }
+    </style>
   </head>
   <body>
     {{ form_start(form) }}
@@ -33,6 +50,26 @@
           </div>
           <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pt-3 border-top-0 text-center">
             {{ form_row(form.check) }}
+          </div>
+        </div>
+      </div>
+      <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+          <div class="modal-header border-bottom-0">
+            <h1 class="modal-title fs-5">Sudoku Plus Results</h1>
+          </div>
+          <div class="modal-body py-0">
+            <table class="table table-sm text-center my-3">
+              <tbody>
+                {% for rowKey, row in grid %}
+                  <tr>
+                  {% for colKey, cell in row %}
+                    <td {% if invalidCells[rowKey] is defined and invalidCells[rowKey][colKey] is defined %}class="table-danger"{% endif %}>{{ cell }}</td>
+                  {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

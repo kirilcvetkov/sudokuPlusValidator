@@ -8,6 +8,7 @@ class SudokuValidationService
 {
     #[ORM\Column(type: 'SudokuGrid')]
     private SudokuGrid $grid;
+    private array $invalidCells = [];
 
    /**
     * Gets the Sudoku Plus grid.
@@ -38,10 +39,22 @@ class SudokuValidationService
     */
     public function validate(): bool
     {
-        return $this->validateShape()
-            && $this->validateRows()
-            && $this->validateColumns()
-            && $this->validateSquareSections();
+        $shape = $this->validateShape();
+        $columns = $this->validateColumns();
+        $rows = $this->validateRows();
+        $squareSections = $this->validateSquareSections();
+
+        return $shape && $columns && $rows && $squareSections;
+    }
+
+   /**
+    * Validates the Sudoku Plus grid.
+    *
+    * @return bool
+    */
+    public function getErrors(): array
+    {
+        return $this->errors;
     }
 
    /**
@@ -76,8 +89,10 @@ class SudokuValidationService
     */
     public function validateRows(): bool
     {
-        foreach ($this->grid as $row) {
+        foreach ($this->grid as $key => $row) {
             if (! $this->validateSet($row)) {
+                $this->setInvalidCells($key, range(0, $this->grid->count() - 1));
+
                 return false;
             }
         }
@@ -94,6 +109,8 @@ class SudokuValidationService
     {
         for ($column = 0; $column < $this->grid->count(); $column++) {
             if (! $this->validateSet($this->grid->arrayColumn($column))) {
+                $this->setInvalidCells(range(0, $this->grid->count() - 1), $column);
+
                 return false;
             }
         }
@@ -108,11 +125,14 @@ class SudokuValidationService
     */
     public function validateSquareSections(): bool
     {
-        $sectionSize = sqrt($this->grid->count());
+        for ($row = 0; $row < $this->grid->count(); $row += $this->grid->sectionSide()) {
+            for ($column = 0; $column < $this->grid->count(); $column += $this->grid->sectionSide()) {
+                if (! $this->validateSet($this->getSquareSection($row, $column))) {
+                    $this->setInvalidCells(
+                        range($row, $row + $this->grid->sectionSide() - 1),
+                        range($column, $column + $this->grid->sectionSide() - 1),
+                    );
 
-        for ($row = 0; $row < $this->grid->count(); $row += $sectionSize) {
-            for ($column = 0; $column < $this->grid->count(); $column += $sectionSize) {
-                if (! $this->validateSet($this->getSquareSection($row, $column, $sectionSize))) {
                     return false;
                 }
             }
@@ -122,18 +142,51 @@ class SudokuValidationService
     }
 
    /**
-    * Get a square sectioon from Sudoku Plus grid.
+    * Get a square section from Sudoku Plus grid.
     *
     * @return int[]
     */
-    public function getSquareSection(int $row, int $column, int $sectionSize): array
+    public function getSquareSection(int $row, int $column): array
     {
         $square = [];
 
-        for ($i = 0; $i < $sectionSize; $i++) {
-            $square = array_merge($square, array_slice($this->grid->get($row + $i), $column, $sectionSize));
+        for ($i = 0; $i < $this->grid->sectionSide(); $i++) {
+            $square = array_merge(
+                $square,
+                array_slice($this->grid->get($row + $i), $column, $this->grid->sectionSide())
+            );
         }
 
         return $square;
+    }
+
+   /**
+    * Get found invalid cells from the Sudoku Plus grid.
+    *
+    * @return int[][]
+    */
+    public function getInvalidCells(): array
+    {
+        return $this->invalidCells;
+    }
+
+   /**
+    * Set invalid cells from the Sudoku Plus grid.
+    */
+    public function setInvalidCells($row, $column): void
+    {
+        if (! is_array($row)) {
+            $row = [$row];
+        }
+
+        if (! is_array($column)) {
+            $column = [$column];
+        }
+
+        foreach ($row as $rowKey) {
+            foreach ($column as $colKey) {
+                $this->invalidCells[$rowKey][$colKey] = true;
+            }
+        }
     }
 }

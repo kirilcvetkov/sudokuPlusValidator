@@ -8,11 +8,21 @@ class CsvService
 {
     private array $contents = [];
 
+   /**
+    * Gets the contencts of the CSV file.
+    *
+    * @return array
+    */
     public function get(): array
     {
         return $this->contents;
     }
 
+   /**
+    * Maps each cell of CSV file to integer.
+    *
+    * @return self
+    */
     public function mapToInt(): self
     {
         foreach ($this->contents as $key => $row) {
@@ -22,6 +32,11 @@ class CsvService
         return $this;
     }
 
+   /**
+    * Parses a CSV file into internal contents array.
+    *
+    * @return self
+    */
     public function parse(SplFileObject $file): self
     {
         $this->contents = [];

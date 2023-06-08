@@ -20,7 +20,6 @@ class SudokuController extends AbstractController
         $validator = new SudokuValidationService();
         $form = $this->createForm(SudokuType::class, $validator);
         $form->handleRequest($request);
-        $result = null;
 
         if ($form->isSubmitted() && $form->isValid()) {
             $csv = $form->get('sudoku')->getData();
@@ -31,11 +30,16 @@ class SudokuController extends AbstractController
             $validator->setGrid($grid);
 
             $result = $validator->validate() ? 1 : 0;
+            $invalidCells = $validator->getInvalidCells();
+            $sectionSide = $grid->sectionSide();
         }
 
         return $this->render('sudokuValidator.html.twig', [
             'form' => $form->createView(),
-            'result' => $result,
+            'result' => $result ?? null,
+            'grid' => $grid ?? null,
+            'invalidCells' => $invalidCells ?? null,
+            'sectionSide' => $sectionSide ?? null,
         ]);
     }
 }
