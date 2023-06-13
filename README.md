@@ -43,6 +43,16 @@ If there are any mistakes, the incorrect entries will be highlighted, and an err
 Review and correct the mistakes in your puzzle based on the feedback provided.
 Repeat the validation process until your puzzle is solved correctly.
 
+## Test Data
+
+For testing purposes, three Sudoku Plus CSV files have been included. These files can be used to validate the Sudoku Plus Validator app. You can find them in the main directory of the app.
+
+- `sudoku9x9.csv`: Contains a valid 9x9 Sudoku Plus puzzle.
+- `sudoku16x16.csv`: Contains a valid 16x16 Sudoku Plus puzzle.
+- `sudoku16x16-invalid.csv`: Contains an invalid 16x16 Sudoku Plus puzzle with conflicting entries.
+
+To test the app with these files, you can import them using the uploader functionality in the main page of the app. This will load the Sudoku puzzle from the CSV file into the grid for validation.
+
 ## Contributing
 
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request to the GitHub repository.
