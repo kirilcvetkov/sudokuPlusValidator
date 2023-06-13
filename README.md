@@ -12,23 +12,23 @@ This app extends the traditional Sudoku game by adding additional rules and cons
 
 ## Installation
 
-Clone the repository:
+1. Clone the repository:
 ```shell
-git clone https://github.com/your-username/sudoku-plus-validator.git
+git clone https://github.com/kirilcvetkov/sudokuPlusValidator.git sudoku-plus-validator
 ```
-Navigate to the project directory:
+2. Navigate to the project directory:
 ```shell
 cd sudoku-plus-validator
 ```
-
-Install the dependencies using Composer:
+3. Copy and update the configuration file.
+```shell
+cp .env.test .env
+```
+4. Install the dependencies using Composer:
 ```shell
 composer install
 ```
-
-Update the database configuration in the .env.local file.
-
-Start the Symfony development server:
+5. Start the Symfony development server:
 ```shell
 symfony server:start
 ```
