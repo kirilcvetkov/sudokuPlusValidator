@@ -32,7 +32,7 @@ class SudokuType extends AbstractType
                 ],
             ])
             ->add('check', SubmitType::class, [
-                'label' => 'Check',
+                'label' => 'Validate',
                 'attr' => ['class' => 'btn btn-primary']
             ])
         ;
