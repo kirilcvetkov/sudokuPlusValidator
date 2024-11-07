@@ -8,7 +8,7 @@ use App\Entity\SudokuGrid;
 use App\Service\SudokuValidationService;
 use PHPUnit\Framework\TestCase;
 
-final class SudokuValidationServiceTest extends TestCase
+final class SudokuPlusValidatorTest extends TestCase
 {
     private SudokuValidationService $validator;
     private array $validGrid = [
